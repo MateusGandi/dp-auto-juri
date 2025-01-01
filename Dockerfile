@@ -1,13 +1,15 @@
-FROM node:16-alpine as production
+FROM node:18-alpine
 
-WORKDIR /usr/src/app
+RUN npm install -g @nestjs/cli
 
-COPY package.json ./
+WORKDIR /app
 
-RUN npm install --force
+COPY package*.json ./
+
+RUN npm install
 
 COPY . .
 
-RUN npm run build
+EXPOSE 4607
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "run", "start"]
