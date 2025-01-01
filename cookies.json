@@ -1,0 +1,34 @@
+{
+  "cookies": [
+    {
+      "name": "JSESSIONID",
+      "value": "rFF7mbJ5Sxsbk1jl5dDF6wR4fNl0F9j0MW_Hy56I.cp09:server-cp09-1",
+      "domain": "projudi.tjgo.jus.br",
+      "path": "/",
+      "expires": -1,
+      "size": 69,
+      "httpOnly": false,
+      "secure": false,
+      "session": true,
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure"
+    },
+    {
+      "name": "WIDPROP",
+      "value": ".cp09-1",
+      "domain": "projudi.tjgo.jus.br",
+      "path": "/",
+      "expires": -1,
+      "size": 14,
+      "httpOnly": true,
+      "secure": true,
+      "session": true,
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure"
+    }
+  ],
+  "currentUrl": "https://projudi.tjgo.jus.br/Usuario?PaginaAtual=7&a1=53980&a2=2&a3=&a4=&a5=&LoginPronto=S&hashFluxo=1735676559735",
+  "timestamp": 1735676559336
+}
