@@ -1,24 +1,21 @@
-FROM node:20
+FROM node:20-alpine
 
-# Instalar dependências necessárias para o Google Chrome
-RUN apt-get update && apt-get install -y \
-  wget \
-  gnupg2 \
-  ca-certificates \
-  curl \
-  fonts-liberation \
-  libappindicator3-1 \
-  libasound2 \
-  libx11-xcb1 \
-  xdg-utils \
-  && rm -rf /var/lib/apt/lists/*
+# Instalar dependências necessárias para o Chromium
+RUN apk update && apk add --no-cache \
+  chromium \
+  nss \
+  freetype \
+  harfbuzz \
+  ttf-freefont \
+  fontconfig \
+  libx11 \
+  libxcomposite \
+  libxdamage \
+  libxrandr \
+  && rm -rf /var/cache/apk/*
 
-# Baixar e instalar o Google Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN dpkg -i google-chrome-stable_current_amd64.deb || apt-get install -f
-
-# Definir variável de ambiente para o Puppeteer usar o Google Chrome instalado
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+# Definir variável de ambiente para o Puppeteer usar o Chromium instalado
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 # Instalar o NestJS CLI
 RUN npm install -g @nestjs/cli
