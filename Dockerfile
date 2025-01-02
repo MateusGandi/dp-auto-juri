@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# Criar um novo usuário (não-root)
+RUN adduser -D myuser
+
 # Instalar dependências necessárias para o Chromium
 RUN apk update && apk add --no-cache \
   chromium \
@@ -23,11 +26,14 @@ RUN npm install -g @nestjs/cli
 WORKDIR /app
 
 # Copiar os arquivos do projeto
-COPY package*.json ./
+COPY package*.json ./ 
 
 RUN npm install
 
 COPY . .
+
+# Mudar para o usuário não-root
+USER myuser
 
 # Expor a porta 4607
 EXPOSE 4607
