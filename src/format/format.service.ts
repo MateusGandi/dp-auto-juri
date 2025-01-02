@@ -45,6 +45,7 @@ export class FormatService {
     index: number,
   ) {
     const { iaKey, prompt } = await this.HTTPRequest.queryOne('ia-config');
+    console.log('Analisando item', iaKey);
     const { data } = await this.HTTPRequest.post(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${iaKey}`,
       {
@@ -106,31 +107,37 @@ export class FormatService {
         __dirname,
         `../../documentos/arquivos-template/${name}`,
       );
+      console.log('teste1');
       const nomeArquivo = `${Date.now()}-${dados.nome_cliente.toLowerCase().replaceAll(' ', '-')}.docx`;
       const outputDocxPath = path.join(
         __dirname,
         `../../documentos/arquivos/${nomeArquivo}`,
       );
+      console.log('teste2');
       const templateData = await this.HTTPRequest.queryOne('all-config');
       const conteudoAdicional = this.getJsonConteudoAdicional(
         pedidos,
         dados,
         templateData,
       );
-
+      console.log('teste3');
       const docxBuffer = fs.readFileSync(docxTemplatePath);
       const zip = new PizZip(docxBuffer);
       const doc = new Docxtemplater(zip, {
         paragraphLoop: true,
         linebreaks: true,
       });
-
+      console.log('teste4');
       doc.render(conteudoAdicional);
       const newDocxBuffer = doc.getZip().generate({ type: 'nodebuffer' });
+
+      console.log('teste44');
       fs.writeFileSync(outputDocxPath, newDocxBuffer);
       await this.HTTPRequest.insert('arquivos', [
         { name: nomeArquivo, created: new Date() },
       ]);
+      console.log('teste45');
+      console.log('teste5');
       return nomeArquivo;
     } catch (error) {
       console.error('Erro ao processar o documento:', error);
@@ -280,12 +287,13 @@ export class FormatService {
         this.formatarConteudoAdicional(clausulasFinais[key], key, index),
       ),
     );
-
+    console.log('clausulasFormated', clausulasFormated);
     const arquivo = await this.getFinalDocumentEditable(
       clausulasFormated.join('\t\t'),
       { ...dados, lista_processos: Object.keys(clausulasFinais).join(', ') },
     );
 
+    console.log('arquivo', arquivo);
     return {
       arquivo: arquivo,
       clausulasFinais,
