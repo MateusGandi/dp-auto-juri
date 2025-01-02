@@ -76,7 +76,7 @@ export class ScrapingService {
 
   async buscarArquivoBerna(processoNumero: string) {
     const browser = await puppeteer.launch({
-      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     const loadedCookies = await this.loadCookies(page);
@@ -201,7 +201,7 @@ export class ScrapingService {
     processoNumeros: string[],
   ): Promise<{ numProcesso: string; localUrl: string }[]> {
     const browser = await puppeteer.launch({
-      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     const loadedCookies = await this.loadCookies(page);
