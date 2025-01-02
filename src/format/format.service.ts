@@ -11,7 +11,7 @@ import { Observable, Subject } from 'rxjs';
 @Injectable()
 export class FormatService {
   private scrapingService = new ScrapingService();
-  private pedidosRegex = /^[a-r]+\)[^)]+/gm;
+  private pedidosRegex = /^[a-z]+\)[^)]+/gm;
   private HTTPRequest = new HTTPRequest();
 
   formatarData() {
@@ -45,7 +45,6 @@ export class FormatService {
     index: number,
   ) {
     const { iaKey, prompt } = await this.HTTPRequest.queryOne('ia-config');
-    console.log('Analisando item', iaKey);
     const { data } = await this.HTTPRequest.post(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${iaKey}`,
       {
@@ -88,6 +87,7 @@ export class FormatService {
 
       const pdfData = await pdf(pdfBuffer);
       const pdfText = pdfData.text;
+      console.log('pdfText', pdfText);
       const pedidosArray = pdfText.match(this.pedidosRegex) || [
         'Nenhum pedido encontrado',
       ];
@@ -107,37 +107,30 @@ export class FormatService {
         __dirname,
         `../../documentos/arquivos-template/${name}`,
       );
-      console.log('teste1');
       const nomeArquivo = `${Date.now()}-${dados.nome_cliente.toLowerCase().replaceAll(' ', '-')}.docx`;
       const outputDocxPath = path.join(
         __dirname,
         `../../documentos/arquivos/${nomeArquivo}`,
       );
-      console.log('teste2');
       const templateData = await this.HTTPRequest.queryOne('all-config');
       const conteudoAdicional = this.getJsonConteudoAdicional(
         pedidos,
         dados,
         templateData,
       );
-      console.log('teste3');
       const docxBuffer = fs.readFileSync(docxTemplatePath);
       const zip = new PizZip(docxBuffer);
       const doc = new Docxtemplater(zip, {
         paragraphLoop: true,
         linebreaks: true,
       });
-      console.log('teste4');
       doc.render(conteudoAdicional);
       const newDocxBuffer = doc.getZip().generate({ type: 'nodebuffer' });
 
-      console.log('teste44');
       fs.writeFileSync(outputDocxPath, newDocxBuffer);
       await this.HTTPRequest.insert('arquivos', [
         { name: nomeArquivo, created: new Date() },
       ]);
-      console.log('teste45');
-      console.log('teste5');
       return nomeArquivo;
     } catch (error) {
       console.error('Erro ao processar o documento:', error);
@@ -161,20 +154,15 @@ export class FormatService {
       let resultados = [];
       let match: any;
 
-      console.log(pdfText); // Log do texto normalizado para debug
-
       // Executa a regex na string
       while ((match = processosRegex.exec(pdfText)) !== null) {
         const status = match[1];
         const processo = match[2] || 'Status'; // Se não houver número, atribui uma string vazia
         resultados.push(status, processo);
       }
-      console.log(resultados);
       // Filtra os resultados para remover "Status"
       resultados = resultados.filter((item) => item !== 'Status');
 
-      // Agrupa os resultados em pares de { numProcesso, status }
-      console.log(resultados);
       for (let i = 0; i < resultados.length; i += 2) {
         processosArray.push({
           numeroProcesso: resultados[i].substring(1),
@@ -256,11 +244,9 @@ export class FormatService {
   };
 
   iniciarFluxo = async (numProcesso: string) => {
-    console.log('teste2');
     const { urlArquivo, dados } =
       await this.scrapingService.buscarArquivoBerna(numProcesso);
 
-    console.log(urlArquivo, dados);
     const processoList = await this.translateLocalBernaDocument(urlArquivo);
 
     const clausulasFinais: any = {};
@@ -287,13 +273,14 @@ export class FormatService {
         this.formatarConteudoAdicional(clausulasFinais[key], key, index),
       ),
     );
-    console.log('clausulasFormated', clausulasFormated);
     const arquivo = await this.getFinalDocumentEditable(
       clausulasFormated.join('\t\t'),
       { ...dados, lista_processos: Object.keys(clausulasFinais).join(', ') },
     );
 
-    console.log('arquivo', arquivo);
+    fs.unlink('../../cookies.json', () =>
+      console.log('arquivo cookies.json removido'),
+    );
     return {
       arquivo: arquivo,
       clausulasFinais,

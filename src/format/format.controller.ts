@@ -22,10 +22,7 @@ export class FormatController {
     @Param('processoNumero') processoNumero: string,
   ) {
     try {
-      console.log('teste1');
-      const resp = await this.formatService.iniciarFluxo(processoNumero);
-
-      return resp;
+      return await this.formatService.iniciarFluxo(processoNumero);
     } catch (error) {
       return { message: error.message };
     }
