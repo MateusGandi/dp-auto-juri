@@ -226,9 +226,7 @@ export class FormatService {
 
   getIAResponse = async (pergunta: string) => {
     try {
-      console.log('teste de interação');
       const { iaKey } = await this.HTTPRequest.queryOne('ia-config');
-      console.log(iaKey);
       const { data } = await this.HTTPRequest.post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${iaKey}`,
         {
@@ -254,6 +252,7 @@ export class FormatService {
     const { urlArquivo, dados } =
       await this.scrapingService.buscarArquivoBerna(numProcesso);
 
+    console.log(urlArquivo, dados);
     const processoList = await this.translateLocalBernaDocument(urlArquivo);
 
     const clausulasFinais: any = {};
