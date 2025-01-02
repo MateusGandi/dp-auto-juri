@@ -33,12 +33,14 @@ export class ScrapingService {
   }
 
   private async loadCookies(page: puppeteer.Page) {
+    console.log('cargcookies1');
     if (fs.existsSync(COOKIE_FILE)) {
       const cookieData = JSON.parse(fs.readFileSync(COOKIE_FILE, 'utf8'));
       const cookies = cookieData.cookies;
       const lastSaved = cookieData.timestamp;
       const savedUrl = cookieData.currentUrl;
 
+      console.log('cargcookies2');
       // Verifica se os cookies têm mais de 30 minutos
       const thirtyMinutes = 30 * 60 * 1000; // 30 minutos em milissegundos
       const currentTime = Date.now();
@@ -48,6 +50,7 @@ export class ScrapingService {
         return null; // Retorna null para forçar o login e salvar novos cookies
       }
 
+      console.log('cargcookies3');
       await page.setCookie(...cookies);
       console.log('Cookies e URL carregados.');
       return savedUrl;
@@ -81,6 +84,7 @@ export class ScrapingService {
 
     console.log('teste3');
     const page = await browser.newPage();
+    console.log('teste3.1');
     const loadedCookies = await this.loadCookies(page);
 
     console.log('teste4');
