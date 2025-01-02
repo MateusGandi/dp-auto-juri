@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-# Instalar as dependências necessárias para o Chromium
+# Instalar dependências necessárias para o Chromium
 RUN apk update && apk add --no-cache \
   chromium \
   nss \
@@ -12,16 +12,6 @@ RUN apk update && apk add --no-cache \
   libxcomposite \
   libxdamage \
   libxrandr \
-  libcups \
-  libappindicator3-1 \
-  libnss3 \
-  libgbm \
-  libasound2 \
-  && apk add --no-cache --virtual .build-deps \
-  gcc \
-  g++ \
-  libtool \
-  make \
   && rm -rf /var/cache/apk/*
 
 # Definir variável de ambiente para o Puppeteer usar o Chromium instalado
