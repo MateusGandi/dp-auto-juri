@@ -129,7 +129,7 @@ export class ArquivoController {
   async deletarArquivo(@Req() req: Request, @Res() res: Response) {
     const { nomePasta, file } = req.params;
     const { data } = await axios.get(
-      `http://localhost:4601/mongo?document=${nomePasta}`,
+      `https://srv488264.hstgr.cloud/conection/mongo?document=${nomePasta}`,
     );
     const { parametros, _id } = data;
     const arquivoToRemove = parametros.find(({ name }) => name === file);
@@ -166,7 +166,7 @@ export class ArquivoController {
       throw new BadRequestException('Documento mongo não informado');
     }
     const { data } = await axios.get(
-      `http://localhost:4601/mongo?document=${documentoMongo}`,
+      `https://srv488264.hstgr.cloud/conection/mongo?document=${documentoMongo}`,
     );
     return data;
   }
