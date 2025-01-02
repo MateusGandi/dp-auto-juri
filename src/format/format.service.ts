@@ -249,6 +249,7 @@ export class FormatService {
   };
 
   iniciarFluxo = async (numProcesso: string) => {
+    console.log('teste2');
     const { urlArquivo, dados } =
       await this.scrapingService.buscarArquivoBerna(numProcesso);
 

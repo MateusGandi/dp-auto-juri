@@ -78,9 +78,12 @@ export class ScrapingService {
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
+
+    console.log('teste3');
     const page = await browser.newPage();
     const loadedCookies = await this.loadCookies(page);
 
+    console.log('teste4');
     if (!loadedCookies) {
       const url = 'https://projudi.tjgo.jus.br/LogOn?PaginaAtual=-200';
       await page.goto(url, { waitUntil: 'domcontentloaded' });
