@@ -70,7 +70,7 @@ export class FormatService {
       num_processo_completo: dados.num_processo_completo,
       nome_cliente: dados.nome_cliente,
       lista_processos: dados.lista_processos,
-      //conteudo_adicional: pedido,
+      conteudo_adicional: pedido,
       pedido_final: templateData.pedido_final,
       local_e_data: this.formatarData(),
       adv_responsavel: templateData.adv_responsavel,
@@ -126,7 +126,7 @@ export class FormatService {
       });
       doc.render(conteudoAdicional);
       const newDocxBuffer = doc.getZip().generate({ type: 'nodebuffer' });
-      console.log(outputDocxPath, newDocxBuffer);
+      console.log(outputDocxPath);
       fs.writeFileSync(outputDocxPath, newDocxBuffer);
       await this.HTTPRequest.insert('arquivos', [
         { name: nomeArquivo, created: new Date() },
