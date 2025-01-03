@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+      - 4500:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer-data:/data
+    environment:
+      NODE_ENV: production
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    restart: always
+    ports:
+      - '4501:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: pwadmin
+      NODE_ENV: production
+    volumes:
+      - ./mongo-data:/data/db
+
+  ab-pipefun-db-connector:
+    build:
+      context: ../ab-pipefun-db-connector
+    container_name: api-db-connector
+    restart: unless-stopped
+    ports:
+      - '4601:4601'
+    environment:
+      NODE_ENV: production
+
+  api-auto-juri:
+    build:
+      context: ../dp-auto-juri
+    volumes:
+      - ./documentos:/usr/src/app/documentos
+    container_name: dp-auto-juri
+    restart: unless-stopped
+    ports:
+      - '4607:4607'
+    environment:
+      NODE_ENV: production

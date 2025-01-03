@@ -145,7 +145,6 @@ export class ArquivoController {
       nomePasta,
       arquivoToRemove.name,
     );
-    console.log(caminhoDoArquivo);
     if (!fs.existsSync(caminhoDoArquivo)) {
       return res.status(404).json({ error: 'Arquivo não encontrado.' });
     }
