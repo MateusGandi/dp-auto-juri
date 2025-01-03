@@ -267,6 +267,29 @@ export class ScrapingService {
           });
         await iframe.waitForSelector('#TabelaArquivos', { visible: true });
 
+        ///////////////////////////////////////////////////
+        const permissaoLink = await iframe.evaluate(async () => {
+          const elem: any = document.querySelector('#menu_outras ul li ul');
+          elem.style.display = 'block';
+          const elem2: any = document.querySelector(
+            '#menu_outras ul li ul li a',
+          );
+          return elem2.href;
+        });
+        const permissaoPage = await browser.newPage();
+        await permissaoPage.goto(permissaoLink, {
+          waitUntil: 'domcontentloaded',
+        });
+
+        await permissaoPage.evaluate(async () => {
+          const link = document.createElement('a');
+          link.href = window.location.href;
+          document.body.appendChild(link);
+          link.click();
+        });
+        permissaoPage.close();
+
+        //////////////////////////////////////////////////////
         const file = await iframe.evaluate(async () => {
           const element = [
             ...document
@@ -295,7 +318,9 @@ export class ScrapingService {
           const pastName = linkComponent.title.split(' ')[0];
           linkComponent.setAttribute('download', fileName);
 
+          console.log('linkComponent', linkComponent);
           if (linkComponent.href.includes('http')) {
+            console.log('clicado1');
             linkComponent.click();
           }
           return {
@@ -304,7 +329,7 @@ export class ScrapingService {
             pastName: pastName,
           };
         });
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
 
         if (!fs.existsSync(path.join(DOWNLOAD_PATH, file.pastName))) {
           // Abra uma nova aba para acessar o link
@@ -315,9 +340,10 @@ export class ScrapingService {
           await newPage.evaluate(() => {
             const link = document.createElement('a');
             link.href = window.location.href;
-            link.download = ''; // Nome do arquivo, se necessário
+            link.download = '';
             link.target = '_blank';
             document.body.appendChild(link);
+            console.log('clicado2');
             link.click();
           });
 
