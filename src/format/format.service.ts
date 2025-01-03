@@ -11,7 +11,8 @@ import { Observable, Subject } from 'rxjs';
 @Injectable()
 export class FormatService {
   private scrapingService = new ScrapingService();
-  private pedidosRegex = /^[a-z]+\)[^)]+/gm;
+  private pedidosRegex = /.*pedidos\b([\s\S]*)/i;
+
   private HTTPRequest = new HTTPRequest();
 
   formatarData() {
@@ -87,11 +88,18 @@ export class FormatService {
 
       const pdfData = await pdf(pdfBuffer);
       const pdfText = pdfData.text;
-      console.log('pdfText', pdfText);
-      const pedidosArray = pdfText.match(this.pedidosRegex) || [
-        'Nenhum pedido encontrado',
-      ];
 
+      const matches = pdfText.match(this.pedidosRegex);
+      var pedidos = '';
+      if (matches && matches[1]) {
+        pedidos = matches[1].trim();
+      }
+
+      const { resposta } = await this.getIAResponse(
+        `A partir do seguinte trecho de texto, extraia extamante como estão as cláusulas do artigo, normalmente se apresentam por 'a) A  citação  dos  Requeridos  nos  endereços  constante  no  preâmbulo ...', 'b) Seja b1) declarado o direito do autor em ver computado, para efeito de, décimo terceiro...' e costumam terminar em um pont final ou ponto-vírgula. Ao obter cada item, remova carateres especiais, mas mantenha a forma com que foram excritas, menos de acentuação e concatene usando '###', exemplo: 'a) item1...###b)item2...' e retorne apenas essa string final, sem qualquer outra explicação ou saudação, apenas a string. ${pedidos}`,
+      );
+
+      const pedidosArray = resposta.replaceAll('\n', '').split('###');
       fs.unlinkSync(pdfPath);
       return pedidosArray;
     } catch (error) {
@@ -126,7 +134,7 @@ export class FormatService {
       });
       doc.render(conteudoAdicional);
       const newDocxBuffer = doc.getZip().generate({ type: 'nodebuffer' });
-      console.log(outputDocxPath);
+
       fs.writeFileSync(outputDocxPath, newDocxBuffer);
       await this.HTTPRequest.insert('arquivos', [
         { name: nomeArquivo, created: new Date() },

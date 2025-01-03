@@ -2,7 +2,7 @@
   "cookies": [
     {
       "name": "JSESSIONID",
-      "value": "4x5sszDmqR_hMOXm62_xAZkxsED0GJ2X0KhvIPVi.cp09:server-cp09-1",
+      "value": "Bg7qqGHFDiqkvGiHWNyvWcI3RPzBmvX275b9zc2Q.cp09:server-cp09-2",
       "domain": "projudi.tjgo.jus.br",
       "path": "/",
       "expires": -1,
@@ -16,7 +16,7 @@
     },
     {
       "name": "WIDPROP",
-      "value": ".cp09-1",
+      "value": ".cp09-2",
       "domain": "projudi.tjgo.jus.br",
       "path": "/",
       "expires": -1,
@@ -29,6 +29,6 @@
       "sourceScheme": "Secure"
     }
   ],
-  "currentUrl": "https://projudi.tjgo.jus.br/Usuario?PaginaAtual=7&a1=53980&a2=2&a3=&a4=&a5=&LoginPronto=S&hashFluxo=1735906179764",
-  "timestamp": 1735906179879
+  "currentUrl": "https://projudi.tjgo.jus.br/Usuario?PaginaAtual=7&a1=53980&a2=2&a3=&a4=&a5=&LoginPronto=S&hashFluxo=1735917724038",
+  "timestamp": 1735917723999
 }
